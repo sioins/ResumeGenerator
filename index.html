@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>简历生成器</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="editor-panel" aria-label="简历编辑区">
+        <header class="panel-header">
+          <div>
+            <p class="eyebrow">Resume Builder</p>
+            <h1>简历生成器</h1>
+          </div>
+          <div class="header-actions">
+            <button class="icon-button" id="importButton" type="button" title="导入 JSON">导入</button>
+            <button class="icon-button" id="resetButton" type="button" title="恢复示例">重置</button>
+          </div>
+        </header>
+
+        <input class="visually-hidden" id="importFile" type="file" accept="application/json,.json" />
+
+        <section class="control-grid">
+          <label>
+            风格
+            <select id="styleSelect">
+              <option value="classic">经典商务</option>
+              <option value="modern">现代蓝</option>
+              <option value="compact">紧凑黑白</option>
+            </select>
+          </label>
+          <label>
+            输出格式
+            <select id="exportFormat">
+              <option value="pdf">PDF / 打印</option>
+              <option value="html">HTML</option>
+              <option value="markdown">Markdown</option>
+              <option value="json">JSON 数据</option>
+            </select>
+          </label>
+          <button class="primary-button" id="exportButton" type="button">导出</button>
+        </section>
+
+        <form id="resumeForm" autocomplete="off">
+          <section class="form-section">
+            <div class="section-title">
+              <h2>基本信息</h2>
+            </div>
+            <div class="field-grid two-columns">
+              <label>
+                姓名
+                <input data-field="basics.name" type="text" />
+              </label>
+              <label>
+                求职方向
+                <input data-field="basics.title" type="text" />
+              </label>
+              <label>
+                出生日期
+                <input data-field="basics.birthday" type="text" />
+              </label>
+              <label>
+                毕业院校
+                <input data-field="basics.school" type="text" />
+              </label>
+              <label>
+                手机
+                <input data-field="basics.phone" type="text" />
+              </label>
+              <label>
+                邮箱
+                <input data-field="basics.email" type="email" />
+              </label>
+              <label>
+                城市
+                <input data-field="basics.location" type="text" />
+              </label>
+              <label>
+                个人链接
+                <input data-field="basics.website" type="text" />
+              </label>
+              <label>
+                政治面貌
+                <input data-field="basics.political" type="text" />
+              </label>
+            </div>
+            <label>
+              个人简介
+              <textarea data-field="basics.summary" rows="4"></textarea>
+            </label>
+            <label class="photo-input">
+              个人图片（可选）
+              <input id="photoInput" type="file" accept="image/*" />
+            </label>
+            <button class="ghost-button" id="removePhotoButton" type="button">移除图片</button>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title">
+              <h2>技能标签</h2>
+            </div>
+            <textarea data-field="skills" rows="3" placeholder="用逗号分隔，例如：JavaScript, Vue, Python"></textarea>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title">
+              <h2>教育经历</h2>
+              <button class="ghost-button" data-add="education" type="button">新增</button>
+            </div>
+            <div id="educationEditor" class="repeat-list"></div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title">
+              <h2>工作经历</h2>
+              <button class="ghost-button" data-add="work" type="button">新增</button>
+            </div>
+            <div id="workEditor" class="repeat-list"></div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title">
+              <h2>项目经历</h2>
+              <button class="ghost-button" data-add="projects" type="button">新增</button>
+            </div>
+            <div id="projectsEditor" class="repeat-list"></div>
+          </section>
+
+          <section class="form-section">
+            <div class="section-title">
+              <h2>成果 / 获奖</h2>
+              <button class="ghost-button" data-add="awards" type="button">新增</button>
+            </div>
+            <div id="awardsEditor" class="repeat-list"></div>
+          </section>
+        </form>
+      </section>
+
+      <section class="preview-panel" aria-label="简历预览区">
+        <div class="preview-toolbar">
+          <p>预览内容可直接编辑；PDF 导出会使用当前预览排版。</p>
+          <button class="ghost-button" id="syncPreviewButton" type="button">用表单刷新预览</button>
+        </div>
+        <article id="resumePreview" class="resume-page style-classic" contenteditable="true"></article>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
