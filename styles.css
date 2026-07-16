@@ -119,6 +119,45 @@ h3 {
   background: #f8fafc;
 }
 
+.palette-panel {
+  margin-bottom: 18px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #ffffff;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.color-field {
+  display: grid;
+  grid-template-rows: auto 34px;
+  gap: 7px;
+  min-width: 0;
+  color: #313844;
+}
+
+.color-field span {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.color-field input {
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid #c8d0dc;
+  border-radius: var(--radius);
+  padding: 3px;
+  background: #ffffff;
+}
+
 .form-section {
   padding: 18px 0;
   border-top: 1px solid var(--line);
@@ -254,7 +293,7 @@ textarea:focus {
   margin: 0 auto;
   padding: 0;
   background: #ffffff;
-  color: #20242d;
+  color: var(--resume-body);
   font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
   font-size: 13.2px;
   line-height: 1.6;
@@ -275,6 +314,7 @@ textarea:focus {
   --resume-side-accent: #cbb8a0;
   --resume-bar: #364756;
   --resume-heading: #1f2937;
+  --resume-body: #20242d;
   --resume-muted: #596675;
   --resume-line: #d6dce3;
   --resume-bullet: #364756;
@@ -487,7 +527,7 @@ textarea:focus {
 }
 
 .item-title {
-  color: #26313e;
+  color: var(--resume-heading);
   font-size: var(--resume-title-size);
   font-weight: 800;
   line-height: 1.42;
@@ -503,13 +543,13 @@ textarea:focus {
 .item-date {
   flex: 0 0 auto;
   text-align: right;
-  color: #26313e;
+  color: var(--resume-heading);
   font-size: var(--resume-font-size);
   font-weight: 800;
 }
 
 .item-subtitle {
-  color: #334155;
+  color: var(--resume-heading);
   font-size: var(--resume-font-size);
   font-weight: 700;
   line-height: 1.5;
@@ -525,7 +565,7 @@ textarea:focus {
   position: relative;
   margin-bottom: 6px;
   padding-left: 17px;
-  color: #2d3440;
+  color: var(--resume-body);
   font-size: var(--resume-font-size);
   line-height: 1.62;
 }
@@ -551,7 +591,7 @@ textarea:focus {
 }
 
 .skill-list .skill-primary {
-  color: #1f2f3d;
+  color: var(--resume-heading);
   font-weight: 700;
 }
 
@@ -604,7 +644,7 @@ textarea:focus {
 }
 
 .achievement-title {
-  color: #26313e;
+  color: var(--resume-heading);
   font-size: var(--resume-title-size);
   font-weight: 800;
   line-height: 1.42;
@@ -700,8 +740,8 @@ textarea:focus {
 .style-awesome .resume-sidebar {
   display: block;
   padding: 13mm 16mm 5mm;
-  background: #ffffff;
-  color: #202124;
+  background: var(--resume-sidebar);
+  color: var(--resume-body);
 }
 
 .style-awesome .sidebar-profile {
@@ -732,7 +772,7 @@ textarea:focus {
 
 .style-awesome .resume-name {
   margin: 0 0 2mm;
-  color: #17191f;
+  color: var(--resume-heading);
   font-size: 31px;
   font-weight: 800;
 }
@@ -758,7 +798,7 @@ textarea:focus {
 
 .style-awesome .sidebar-section h2 {
   margin-bottom: 2mm;
-  color: #222222;
+  color: var(--resume-heading);
   font-size: 12.6px;
   text-transform: uppercase;
 }
@@ -767,11 +807,11 @@ textarea:focus {
 .style-awesome .sidebar-contact .sidebar-row {
   display: inline;
   margin-right: 10px;
-  color: #4a4f57;
+  color: var(--resume-body);
 }
 
 .style-awesome .sidebar-label {
-  color: #1e1f24;
+  color: var(--resume-heading);
 }
 
 .style-awesome .sidebar-label::before {
@@ -781,7 +821,7 @@ textarea:focus {
 .style-awesome .sidebar-value,
 .style-awesome .sidebar-contact .sidebar-value {
   padding-left: 0;
-  color: #565b63;
+  color: var(--resume-muted);
 }
 
 .style-awesome .resume-main,
@@ -811,7 +851,7 @@ textarea:focus {
 
 .style-awesome .item-title,
 .style-awesome .achievement-title {
-  color: #1b1d22;
+  color: var(--resume-heading);
   font-size: 14.4px;
 }
 
@@ -828,9 +868,9 @@ textarea:focus {
 
 .style-awesome .skill-list li {
   margin: 0;
-  border: 1px solid #e2c7ca;
+  border: 1px solid color-mix(in srgb, var(--resume-side-accent) 28%, white);
   padding: 2px 8px;
-  color: #2d2f36;
+  color: var(--resume-body);
 }
 
 .style-awesome .skill-list li::before {
@@ -876,7 +916,7 @@ textarea:focus {
 }
 
 .style-flow .resume-name {
-  color: #163447;
+  color: var(--resume-heading);
   font-size: 25px;
 }
 
@@ -891,7 +931,7 @@ textarea:focus {
 
 .style-flow .sidebar-section h2,
 .style-flow .sidebar-label {
-  color: #163447;
+  color: var(--resume-heading);
 }
 
 .style-flow .resume-main {
@@ -902,8 +942,8 @@ textarea:focus {
   min-height: 7mm;
   border-radius: 999px;
   padding: 5px 12px;
-  background: #eaf6fb;
-  color: #1f5f7d;
+  background: color-mix(in srgb, var(--resume-bar) 14%, white);
+  color: var(--resume-bar);
 }
 
 .style-flow .section-icon {
@@ -919,9 +959,9 @@ textarea:focus {
 .style-flow .skill-list li {
   margin: 0;
   border-radius: 999px;
-  background: #eaf6fb;
+  background: color-mix(in srgb, var(--resume-bar) 14%, white);
   padding: 4px 9px;
-  color: #20546c;
+  color: var(--resume-bar);
   font-size: 12.4px;
 }
 
@@ -947,7 +987,7 @@ textarea:focus {
 
 .style-novo .resume-sidebar {
   padding: 13mm 8mm;
-  background: #242a38;
+  background: var(--resume-sidebar);
 }
 
 .style-novo .sidebar-profile::after {
@@ -970,7 +1010,7 @@ textarea:focus {
   border-left: 5px solid var(--resume-side-accent);
   padding: 4px 0 4px 9px;
   background: transparent;
-  color: #242a38;
+  color: var(--resume-heading);
 }
 
 .style-novo .section-icon {
@@ -1028,17 +1068,17 @@ textarea:focus {
 
 .style-minimal .resume-sidebar {
   display: block;
-  padding: 15mm 18mm 4mm;
+  padding: 14mm 17mm 2mm;
   background: #ffffff;
-  color: #111111;
-  text-align: center;
+  color: var(--resume-body);
+  text-align: left;
 }
 
 .style-minimal .sidebar-profile::after {
-  width: 100%;
+  width: 26mm;
   height: 1px;
-  margin: 5mm 0 0;
-  background: #111111;
+  margin: 4mm 0 0;
+  background: var(--resume-bar);
 }
 
 .style-minimal .resume-photo,
@@ -1047,16 +1087,16 @@ textarea:focus {
 }
 
 .style-minimal .resume-name {
-  margin: 0 0 2mm;
-  color: #111111;
-  font-size: 30px;
-  font-weight: 500;
-  text-transform: uppercase;
+  margin: 0 0 1.5mm;
+  color: var(--resume-heading);
+  font-size: 27px;
+  font-weight: 700;
+  text-transform: none;
 }
 
 .style-minimal .resume-title {
-  color: #333333;
-  font-size: 12.6px;
+  color: var(--resume-muted);
+  font-size: 12.8px;
   font-weight: 400;
 }
 
@@ -1064,6 +1104,16 @@ textarea:focus {
   display: inline;
   border: 0;
   padding: 0;
+}
+
+.style-minimal .sidebar-basic {
+  display: block;
+  margin-top: 3mm;
+}
+
+.style-minimal .sidebar-contact {
+  display: block;
+  margin-top: 1mm;
 }
 
 .style-minimal .sidebar-section h2,
@@ -1075,31 +1125,30 @@ textarea:focus {
 .style-minimal .sidebar-row,
 .style-minimal .sidebar-contact .sidebar-row {
   display: inline;
-  margin: 0 7px;
+  margin: 0 9px 0 0;
 }
 
 .style-minimal .sidebar-value,
 .style-minimal .sidebar-contact .sidebar-value {
   padding-left: 0;
-  color: #333333;
+  color: var(--resume-muted);
   font-size: 11.8px;
 }
 
 .style-minimal .resume-section {
-  margin-bottom: 6mm;
+  margin-bottom: 5.5mm;
 }
 
 .style-minimal .resume-section h2 {
-  justify-content: center;
+  justify-content: flex-start;
   min-height: auto;
-  margin-bottom: 3.5mm;
-  border-top: 1px solid #111111;
-  border-bottom: 1px solid #111111;
-  padding: 4px 0;
+  margin-bottom: 2.8mm;
+  border-bottom: 1px solid var(--resume-bar);
+  padding: 0 0 1.4mm;
   background: transparent;
-  color: #111111;
+  color: var(--resume-heading);
   font-size: var(--resume-section-title-size);
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
 }
 
@@ -1109,20 +1158,20 @@ textarea:focus {
 
 .style-minimal .item-title,
 .style-minimal .achievement-title {
-  color: #111111;
+  color: var(--resume-heading);
   font-size: var(--resume-title-size);
 }
 
 .style-minimal .item-date {
-  color: #111111;
+  color: var(--resume-muted);
   font-size: 11.8px;
 }
 
 .style-minimal .skill-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 4px 10px;
+  justify-content: flex-start;
+  gap: 4px 12px;
 }
 
 .style-minimal .skill-list li {
@@ -1155,8 +1204,8 @@ textarea:focus {
   grid-template-columns: 1fr 32mm;
   gap: 6mm;
   padding: 12mm 14mm 0;
-  background: #ffffff;
-  color: #111111;
+  background: var(--resume-sidebar);
+  color: var(--resume-body);
 }
 
 .style-table .sidebar-profile {
@@ -1189,12 +1238,12 @@ textarea:focus {
 
 .style-table .resume-name {
   margin: 0 0 2mm;
-  color: #111111;
+  color: var(--resume-heading);
   font-size: 28px;
 }
 
 .style-table .resume-title {
-  color: #333333;
+  color: var(--resume-muted);
 }
 
 .style-table .sidebar-section {
@@ -1213,7 +1262,7 @@ textarea:focus {
   border-bottom: 1px solid #111111;
   padding: 4px 7px;
   background: var(--resume-bar);
-  color: #111111;
+  color: var(--resume-heading);
 }
 
 .style-table .sidebar-row,
@@ -1230,7 +1279,7 @@ textarea:focus {
   border-right: 1px solid #111111;
   padding: 4px 6px;
   background: #f4f6f8;
-  color: #111111;
+  color: var(--resume-heading);
 }
 
 .style-table .sidebar-label::before {
@@ -1240,7 +1289,7 @@ textarea:focus {
 .style-table .sidebar-value,
 .style-table .sidebar-contact .sidebar-value {
   padding: 4px 6px;
-  color: #222222;
+  color: var(--resume-body);
 }
 
 .style-table .resume-main {
@@ -1258,7 +1307,7 @@ textarea:focus {
   border-bottom: 1px solid #111111;
   padding: 5px 8px;
   background: var(--resume-bar);
-  color: #111111;
+  color: var(--resume-heading);
 }
 
 .style-table .section-icon {
@@ -1317,6 +1366,7 @@ textarea:focus {
   }
 
   .control-grid,
+  .color-grid,
   .two-columns {
     grid-template-columns: 1fr;
   }
@@ -1429,8 +1479,13 @@ textarea:focus {
   }
 
   .style-flow .resume-section h2 {
-    background-color: #eaf6fb !important;
-    box-shadow: inset 0 0 0 1000px #eaf6fb;
+    background-color: color-mix(in srgb, var(--resume-bar) 14%, white) !important;
+    box-shadow: inset 0 0 0 1000px color-mix(in srgb, var(--resume-bar) 14%, white);
+  }
+
+  .style-minimal .sidebar-profile::after {
+    background-color: var(--resume-bar) !important;
+    box-shadow: inset 0 0 0 1000px var(--resume-bar);
   }
 
   .style-table .resume-section h2,

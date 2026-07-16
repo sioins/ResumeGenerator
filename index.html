@@ -48,6 +48,31 @@
           <button class="primary-button" id="exportButton" type="button">导出</button>
         </section>
 
+        <section class="palette-panel" aria-label="简历调色盘">
+          <div class="section-title">
+            <h2>调色盘</h2>
+            <button class="ghost-button" id="resetColorsButton" type="button">恢复配色</button>
+          </div>
+          <div class="color-grid">
+            <label class="color-field">
+              <span>强调色</span>
+              <input data-color="accent" type="color" />
+            </label>
+            <label class="color-field">
+              <span>侧栏</span>
+              <input data-color="sidebar" type="color" />
+            </label>
+            <label class="color-field">
+              <span>区块</span>
+              <input data-color="bar" type="color" />
+            </label>
+            <label class="color-field">
+              <span>正文</span>
+              <input data-color="text" type="color" />
+            </label>
+          </div>
+        </section>
+
         <form id="resumeForm" autocomplete="off">
           <section class="form-section">
             <div class="section-title">

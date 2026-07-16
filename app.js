@@ -1,5 +1,57 @@
+const styleColorPresets = {
+  classic: {
+    accent: "#cbb8a0",
+    sidebar: "#364756",
+    bar: "#364756",
+    text: "#20242d"
+  },
+  modern: {
+    accent: "#b7dbe8",
+    sidebar: "#1f536a",
+    bar: "#245b72",
+    text: "#20242d"
+  },
+  compact: {
+    accent: "#c8c8c8",
+    sidebar: "#30343a",
+    bar: "#3b3f45",
+    text: "#20242d"
+  },
+  awesome: {
+    accent: "#b21f2d",
+    sidebar: "#ffffff",
+    bar: "#b21f2d",
+    text: "#202124"
+  },
+  flow: {
+    accent: "#54a6c8",
+    sidebar: "#eff7fb",
+    bar: "#2f7697",
+    text: "#20242d"
+  },
+  novo: {
+    accent: "#f2b84b",
+    sidebar: "#242a38",
+    bar: "#242a38",
+    text: "#20242d"
+  },
+  minimal: {
+    accent: "#111111",
+    sidebar: "#ffffff",
+    bar: "#111111",
+    text: "#111111"
+  },
+  table: {
+    accent: "#d7dde7",
+    sidebar: "#ffffff",
+    bar: "#e7ebf1",
+    text: "#111111"
+  }
+};
+
 const defaultResume = {
   style: "classic",
+  colors: styleColorPresets.classic,
   basics: {
     name: "张三",
     title: "前端开发工程师",
@@ -155,6 +207,7 @@ const preview = document.querySelector("#resumePreview");
 const styleSelect = document.querySelector("#styleSelect");
 const exportFormat = document.querySelector("#exportFormat");
 const importFile = document.querySelector("#importFile");
+const colorInputs = document.querySelectorAll("[data-color]");
 let originalTitleForPrint = "";
 
 function clone(value) {
@@ -174,6 +227,10 @@ function mergeResume(base, saved) {
   const merged = clone(base);
   Object.assign(merged, saved);
   merged.basics = { ...base.basics, ...(saved.basics || {}) };
+  merged.colors = {
+    ...(styleColorPresets[merged.style] || styleColorPresets.classic),
+    ...(saved.colors || {})
+  };
   for (const key of ["skills", "education", "work", "projects", "awards"]) {
     merged[key] = Array.isArray(saved[key]) ? saved[key] : base[key];
   }
@@ -226,6 +283,9 @@ function getByPath(path) {
 
 function renderForm() {
   styleSelect.value = resume.style;
+  colorInputs.forEach((input) => {
+    input.value = getResumeColors()[input.dataset.color];
+  });
 
   document.querySelectorAll("[data-field]").forEach((element) => {
     const field = element.dataset.field;
@@ -283,6 +343,7 @@ function renderRepeatField(sectionKey, index, key, label, type, value) {
 
 function renderPreview() {
   preview.className = `resume-page style-${resume.style}`;
+  applyPreviewColors();
   preview.innerHTML = `
     <div class="resume-layout">
       <aside class="resume-sidebar">
@@ -318,6 +379,35 @@ function renderPreview() {
       </main>
     </div>
   `;
+}
+
+function getResumeColors() {
+  return {
+    ...(styleColorPresets[resume.style] || styleColorPresets.classic),
+    ...(resume.colors || {})
+  };
+}
+
+function resetColorsForStyle() {
+  resume.colors = clone(styleColorPresets[resume.style] || styleColorPresets.classic);
+  renderForm();
+  persist();
+  renderPreview();
+}
+
+function applyPreviewColors() {
+  const colors = getResumeColors();
+  preview.style.setProperty("--resume-custom-accent", colors.accent);
+  preview.style.setProperty("--resume-custom-sidebar", colors.sidebar);
+  preview.style.setProperty("--resume-custom-bar", colors.bar);
+  preview.style.setProperty("--resume-custom-text", colors.text);
+  preview.style.setProperty("--resume-side-accent", colors.accent);
+  preview.style.setProperty("--resume-bullet", colors.accent);
+  preview.style.setProperty("--resume-achievement", colors.accent);
+  preview.style.setProperty("--resume-sidebar", colors.sidebar);
+  preview.style.setProperty("--resume-bar", colors.bar);
+  preview.style.setProperty("--resume-heading", colors.text);
+  preview.style.setProperty("--resume-body", colors.text);
 }
 
 function renderSidebarBlock(title, items, className = "") {
@@ -511,9 +601,21 @@ form.addEventListener("click", (event) => {
 
 styleSelect.addEventListener("change", () => {
   resume.style = styleSelect.value;
-  persist();
-  renderPreview();
+  resetColorsForStyle();
 });
+
+colorInputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    resume.colors = {
+      ...getResumeColors(),
+      [input.dataset.color]: input.value
+    };
+    persist();
+    renderPreview();
+  });
+});
+
+document.querySelector("#resetColorsButton").addEventListener("click", resetColorsForStyle);
 
 document.querySelector("#photoInput").addEventListener("change", (event) => {
   const file = event.target.files?.[0];
