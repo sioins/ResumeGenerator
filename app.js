@@ -12,9 +12,9 @@ const styleColorPresets = {
     text: "#20242d"
   },
   compact: {
-    accent: "#c8c8c8",
-    sidebar: "#30343a",
-    bar: "#3b3f45",
+    accent: "#8f7a5a",
+    sidebar: "#2f3437",
+    bar: "#3f4749",
     text: "#20242d"
   },
   awesome: {
@@ -36,22 +36,113 @@ const styleColorPresets = {
     text: "#20242d"
   },
   minimal: {
-    accent: "#111111",
+    accent: "#8a6f4d",
     sidebar: "#ffffff",
-    bar: "#111111",
-    text: "#111111"
+    bar: "#2f3a3d",
+    text: "#222426"
   },
   table: {
-    accent: "#d7dde7",
+    accent: "#7f9ca6",
     sidebar: "#ffffff",
-    bar: "#e7ebf1",
-    text: "#111111"
+    bar: "#dfe9ec",
+    text: "#243238"
+  },
+  blush: {
+    accent: "#c6a08d",
+    sidebar: "#f2dde0",
+    bar: "#ead0d4",
+    text: "#595960"
+  },
+  timeline: {
+    accent: "#b98363",
+    sidebar: "#eef2f5",
+    bar: "#44566a",
+    text: "#3f4a56"
+  },
+  engineer: {
+    accent: "#6f8f72",
+    sidebar: "#ffffff",
+    bar: "#3d5f62",
+    text: "#343f42"
+  },
+  game: {
+    accent: "#8fb3ff",
+    sidebar: "#384052",
+    bar: "#697aa3",
+    text: "#d8deec"
+  },
+  executive: {
+    accent: "#bda18f",
+    sidebar: "#ffffff",
+    bar: "#5b5046",
+    text: "#4a4d55"
+  },
+  slate: {
+    accent: "#c9a36f",
+    sidebar: "#3f4c5d",
+    bar: "#4b5d73",
+    text: "#374151"
+  },
+  offset: {
+    accent: "#b8c7d9",
+    sidebar: "#eef1f5",
+    bar: "#34495e",
+    text: "#46505b"
+  },
+  bronze: {
+    accent: "#a3836e",
+    sidebar: "#ffffff",
+    bar: "#3b3936",
+    text: "#f0eeee"
+  },
+  softsplit: {
+    accent: "#9b7f59",
+    sidebar: "#f5f2ed",
+    bar: "#4f5d58",
+    text: "#4f5356"
+  },
+  geometric: {
+    accent: "#557184",
+    sidebar: "#3f4848",
+    bar: "#557184",
+    text: "#3f3f43"
+  },
+  crimson: {
+    accent: "#8b2b2e",
+    sidebar: "#ffffff",
+    bar: "#8b2b2e",
+    text: "#47505c"
   }
 };
+
+const styleTypographyPresets = {
+  classic: [13.2, 12, 12.2, 15, 15.2, 15.2, 26],
+  modern: [13.2, 12, 12.2, 15, 15.2, 15.2, 26],
+  compact: [12.8, 11.5, 11.8, 14.2, 14.4, 14.4, 24],
+  awesome: [12.8, 11.6, 12.2, 14.4, 13, 12.6, 31],
+  flow: [13, 11.8, 12, 14.4, 14.6, 14.6, 25],
+  novo: [13, 11.8, 12, 14.6, 14.8, 14.8, 26],
+  minimal: [12.9, 11.4, 11.8, 13.8, 12.8, 12.8, 27],
+  table: [12.7, 11.5, 11.5, 13.8, 13.2, 13.2, 28],
+  blush: [12.6, 11.4, 11.6, 14.1, 13, 13, 29],
+  timeline: [12.6, 11.3, 11.6, 14, 15, 14, 28],
+  engineer: [12.7, 11.5, 11.6, 14, 13.6, 13, 30],
+  game: [12.2, 11, 11.2, 13.7, 13, 12.6, 25],
+  executive: [12.5, 11.3, 11.4, 13.8, 13.4, 13, 27],
+  slate: [12.4, 11.2, 11.4, 13.8, 14.2, 13.4, 28],
+  offset: [12.5, 11.2, 11.4, 13.8, 13.8, 13.2, 28],
+  bronze: [12.2, 11.1, 11.2, 13.5, 13.4, 13.2, 27],
+  softsplit: [12.4, 11.1, 11.3, 13.7, 13.5, 13.2, 29],
+  geometric: [12.3, 11.1, 11.3, 13.8, 14, 13.4, 27],
+  crimson: [12.4, 11.2, 11.4, 13.8, 13.6, 13.2, 27]
+};
+
+const modelRenderStyles = new Set(["executive", "slate", "offset", "bronze", "softsplit", "geometric", "crimson"]);
 
 const defaultResume = {
   style: "classic",
   colors: styleColorPresets.classic,
+  fontScale: 100,
   basics: {
     name: "张三",
     title: "前端开发工程师",
@@ -208,6 +299,8 @@ const styleSelect = document.querySelector("#styleSelect");
 const exportFormat = document.querySelector("#exportFormat");
 const importFile = document.querySelector("#importFile");
 const colorInputs = document.querySelectorAll("[data-color]");
+const fontScaleInput = document.querySelector("#fontScaleInput");
+const fontScaleValue = document.querySelector("#fontScaleValue");
 let originalTitleForPrint = "";
 
 function clone(value) {
@@ -227,6 +320,7 @@ function mergeResume(base, saved) {
   const merged = clone(base);
   Object.assign(merged, saved);
   merged.basics = { ...base.basics, ...(saved.basics || {}) };
+  merged.fontScale = normalizeFontScale(saved.fontScale ?? base.fontScale);
   merged.colors = {
     ...(styleColorPresets[merged.style] || styleColorPresets.classic),
     ...(saved.colors || {})
@@ -283,6 +377,8 @@ function getByPath(path) {
 
 function renderForm() {
   styleSelect.value = resume.style;
+  fontScaleInput.value = normalizeFontScale(resume.fontScale);
+  fontScaleValue.textContent = `${fontScaleInput.value}%`;
   colorInputs.forEach((input) => {
     input.value = getResumeColors()[input.dataset.color];
   });
@@ -344,6 +440,11 @@ function renderRepeatField(sectionKey, index, key, label, type, value) {
 function renderPreview() {
   preview.className = `resume-page style-${resume.style}`;
   applyPreviewColors();
+  applyPreviewTypography();
+  if (modelRenderStyles.has(resume.style)) {
+    preview.innerHTML = renderTemplateModel(resume.style);
+    return;
+  }
   preview.innerHTML = `
     <div class="resume-layout">
       <aside class="resume-sidebar">
@@ -381,11 +482,328 @@ function renderPreview() {
   `;
 }
 
+function renderTemplateModel(style) {
+  const renderers = {
+    executive: renderExecutiveModel,
+    slate: renderSlateModel,
+    offset: renderOffsetModel,
+    bronze: renderBronzeModel,
+    softsplit: renderSoftsplitModel,
+    geometric: renderGeometricModel,
+    crimson: renderCrimsonModel
+  };
+  return renderers[style]();
+}
+
+function renderExecutiveModel() {
+  return `
+    <div class="template-model model-executive">
+      <header class="model-band">
+        ${modelPhotoBlock()}
+        ${modelNameHeader()}
+        <div class="model-band-contact">${modelContactRows()}</div>
+      </header>
+      <aside class="model-side">
+        ${modelSideSection("About Me", `<p>${escapeHtml(resume.basics.summary || "")}</p>`)}
+        ${modelSideSection("Skills", modelBulletList(resume.skills))}
+        ${modelSideSection("Education", modelEducationCompact())}
+      </aside>
+      <main class="model-body">
+        ${modelTimelineSection("Work Experience", resume.work)}
+        ${modelTimelineSection("Projects", resume.projects)}
+        ${modelGridSection("Achievements", resume.awards, modelAwardCard)}
+      </main>
+    </div>
+  `;
+}
+
+function renderSlateModel() {
+  return `
+    <div class="template-model model-slate">
+      <aside class="model-side">
+        ${modelPhotoBlock()}
+        ${modelSideSection("Contact", modelContactRows())}
+        ${modelSideSection("Education", modelEducationCompact())}
+        ${modelSideSection("Skills", modelBulletList(resume.skills))}
+        ${modelSideSection("Language", modelBulletList([resume.basics.political, resume.basics.location].filter(Boolean)))}
+      </aside>
+      <main class="model-body">
+        ${modelNameHeader()}
+        ${modelSection("Profile", `<p>${escapeHtml(resume.basics.summary || "")}</p>`, "profile")}
+        ${modelTimelineSection("Work Experience", resume.work)}
+        ${modelTimelineSection("Education", resume.education)}
+        ${modelGridSection("Reference", resume.awards, modelAwardCard)}
+      </main>
+    </div>
+  `;
+}
+
+function renderOffsetModel() {
+  return `
+    <div class="template-model model-offset">
+      <header class="model-band">
+        ${modelPhotoBlock()}
+        ${modelNameHeader()}
+        <div class="model-band-contact">${modelContactRows()}</div>
+      </header>
+      <aside class="model-side">
+        ${modelSideSection("About Me", `<p>${escapeHtml(resume.basics.summary || "")}</p>`)}
+        ${modelSideSection("Skills", modelBulletList(resume.skills))}
+        ${modelSideSection("Education", modelEducationCompact())}
+      </aside>
+      <main class="model-body">
+        ${modelTimelineSection("Professional Experience", resume.work)}
+        ${modelTimelineSection("Education", resume.education)}
+        ${modelSection("Projects", modelProjectCards(), "projects")}
+      </main>
+    </div>
+  `;
+}
+
+function renderBronzeModel() {
+  return `
+    <div class="template-model model-bronze">
+      <aside class="model-side">
+        ${modelNameHeader()}
+        ${modelSideSection("Contact", modelContactRows())}
+        ${modelSideSection("Education", modelEducationCompact())}
+        ${modelSideSection("Skills", modelBulletList(resume.skills))}
+      </aside>
+      <main class="model-body">
+        ${modelPhotoBlock()}
+        ${modelTimelineSection("Education", resume.education)}
+        ${modelTimelineSection("Experience", resume.work)}
+        ${modelSection("Projects", modelProjectCards(), "projects")}
+      </main>
+    </div>
+  `;
+}
+
+function renderSoftsplitModel() {
+  return `
+    <div class="template-model model-softsplit">
+      <header class="model-band">
+        ${modelPhotoBlock()}
+        ${modelNameHeader()}
+      </header>
+      <aside class="model-side">
+        ${modelSideSection("Contact", modelContactRows())}
+        ${modelSideSection("Skills", modelBulletList(resume.skills))}
+        ${modelSideSection("Education", modelEducationCompact())}
+        ${modelSideSection("Language", modelBulletList([resume.basics.location, resume.basics.political].filter(Boolean)))}
+      </aside>
+      <main class="model-body">
+        ${modelSection("Profile", `<p>${escapeHtml(resume.basics.summary || "")}</p>`, "profile")}
+        ${modelTimelineSection("Experience", resume.work)}
+        ${modelGridSection("References", resume.awards, modelAwardCard)}
+      </main>
+    </div>
+  `;
+}
+
+function renderGeometricModel() {
+  return `
+    <div class="template-model model-geometric">
+      <aside class="model-side">
+        ${modelPhotoBlock()}
+        ${modelSideSection("Contact", modelContactRows())}
+        ${modelSideSection("Skills", modelBulletList(resume.skills))}
+        ${modelSideSection("Languages", modelBulletList([resume.basics.location, resume.basics.political].filter(Boolean)))}
+      </aside>
+      <main class="model-body">
+        ${modelNameHeader()}
+        ${modelSection("About Me", `<p>${escapeHtml(resume.basics.summary || "")}</p>`, "profile")}
+        ${modelTimelineSection("Education", resume.education)}
+        ${modelTimelineSection("Experience", resume.work)}
+        ${modelSection("Projects", modelProjectCards(), "projects")}
+      </main>
+    </div>
+  `;
+}
+
+function renderCrimsonModel() {
+  return `
+    <div class="template-model model-crimson">
+      <header class="model-band">
+        ${modelPhotoBlock()}
+        ${modelNameHeader()}
+      </header>
+      <aside class="model-side">
+        ${modelSideSection("Contact", modelContactRows())}
+        ${modelSideSection("Education", modelEducationCompact())}
+        ${modelSideSection("Skills", modelBulletList(resume.skills))}
+      </aside>
+      <main class="model-body">
+        ${modelSection("Profile", `<p>${escapeHtml(resume.basics.summary || "")}</p>`, "profile")}
+        ${modelTimelineSection("Work Experience", resume.work)}
+        ${modelGridSection("Reference", resume.awards, modelAwardCard)}
+      </main>
+    </div>
+  `;
+}
+
+function modelPhotoBlock() {
+  return `
+    <div class="model-photo-wrap">
+      ${resume.basics.photo ? `<img class="model-photo" src="${resume.basics.photo}" alt="个人图片" />` : `<div class="model-photo model-photo-placeholder">照片</div>`}
+    </div>
+  `;
+}
+
+function modelNameHeader() {
+  return `
+    <div class="model-name-block">
+      <h1>${escapeHtml(resume.basics.name || "姓名")}</h1>
+      <p>${escapeHtml(resume.basics.title || "求职方向")}</p>
+    </div>
+  `;
+}
+
+function modelSideSection(title, content) {
+  if (!String(content || "").trim()) return "";
+  return `
+    <section class="model-side-section">
+      <h2>${escapeHtml(title)}</h2>
+      ${content}
+    </section>
+  `;
+}
+
+function modelSection(title, content, className = "") {
+  if (!String(content || "").trim()) return "";
+  return `
+    <section class="model-section ${className}">
+      <h2>${escapeHtml(title)}</h2>
+      ${content}
+    </section>
+  `;
+}
+
+function modelContactRows() {
+  return [
+    ["电话", resume.basics.phone],
+    ["邮箱", resume.basics.email],
+    ["城市", resume.basics.location],
+    ["链接", resume.basics.website]
+  ]
+    .filter(([, value]) => String(value || "").trim())
+    .map(([label, value]) => `
+      <div class="model-contact-row">
+        <span>${escapeHtml(label)}</span>
+        <strong>${escapeHtml(value)}</strong>
+      </div>
+    `)
+    .join("");
+}
+
+function modelBulletList(items) {
+  const visibleItems = (items || []).filter(Boolean);
+  if (!visibleItems.length) return "";
+  return `<ul class="model-list">${visibleItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+}
+
+function modelEducationCompact() {
+  return resume.education
+    .filter(hasContent)
+    .map((item) => `
+      <div class="model-compact-item">
+        <strong>${escapeHtml(item.school || "学校")}</strong>
+        <span>${escapeHtml([item.degree, item.major].filter(Boolean).join(" / "))}</span>
+        <em>${escapeHtml(dateRange(item.start, item.end))}</em>
+      </div>
+    `)
+    .join("");
+}
+
+function modelTimelineSection(title, items) {
+  const content = items
+    .filter(hasContent)
+    .map(modelTimelineItem)
+    .join("");
+  return modelSection(title, `<div class="model-timeline">${content}</div>`);
+}
+
+function modelTimelineItem(item) {
+  const primary = item.company || item.school || item.name || "经历";
+  const secondary = item.role || [item.degree, item.major].filter(Boolean).join(" / ") || item.tech || item.issuer || "";
+  const time = dateRange(item.start, item.end) || item.date || "";
+  return `
+    <article class="model-timeline-item ${time ? "" : "no-time"}">
+      ${time ? `<div class="model-time">${escapeHtml(time)}</div>` : ""}
+      <div class="model-entry">
+        <h3>${escapeHtml(primary)}</h3>
+        ${secondary ? `<p class="model-subtitle">${escapeHtml(secondary)}</p>` : ""}
+        ${item.location ? `<p class="model-meta">${escapeHtml(item.location)}</p>` : ""}
+        ${renderBullets(item.details)}
+      </div>
+    </article>
+  `;
+}
+
+function modelProjectCards() {
+  return resume.projects
+    .filter(hasContent)
+    .map((item) => `
+      <article class="model-card">
+        <h3>${escapeHtml(item.name || "项目")}</h3>
+        <p>${escapeHtml([item.role, item.tech, dateRange(item.start, item.end)].filter(Boolean).join(" / "))}</p>
+        ${renderBullets(item.details)}
+      </article>
+    `)
+    .join("");
+}
+
+function modelGridSection(title, items, mapper) {
+  const content = items.filter(hasContent).map(mapper).join("");
+  return modelSection(title, `<div class="model-grid">${content}</div>`);
+}
+
+function modelAwardCard(item) {
+  return `
+    <article class="model-card">
+      <h3>${escapeHtml(item.name || "成果")}</h3>
+      <p>${escapeHtml([item.issuer, item.date].filter(Boolean).join(" / "))}</p>
+      ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
+    </article>
+  `;
+}
+
 function getResumeColors() {
   return {
     ...(styleColorPresets[resume.style] || styleColorPresets.classic),
     ...(resume.colors || {})
   };
+}
+
+function normalizeFontScale(value) {
+  const scale = Number(value);
+  if (!Number.isFinite(scale)) return 100;
+  return Math.min(120, Math.max(85, Math.round(scale)));
+}
+
+function applyPreviewTypography() {
+  const scale = normalizeFontScale(resume.fontScale) / 100;
+  const [
+    fontSize,
+    smallSize,
+    metaSize,
+    titleSize,
+    sectionTitleSize,
+    sidebarTitleSize,
+    nameSize
+  ] = styleTypographyPresets[resume.style] || styleTypographyPresets.classic;
+
+  preview.style.setProperty("--resume-font-size", `${roundSize(fontSize * scale)}px`);
+  preview.style.setProperty("--resume-small-size", `${roundSize(smallSize * scale)}px`);
+  preview.style.setProperty("--resume-meta-size", `${roundSize(metaSize * scale)}px`);
+  preview.style.setProperty("--resume-title-size", `${roundSize(titleSize * scale)}px`);
+  preview.style.setProperty("--resume-section-title-size", `${roundSize(sectionTitleSize * scale)}px`);
+  preview.style.setProperty("--resume-sidebar-title-size", `${roundSize(sidebarTitleSize * scale)}px`);
+  preview.style.setProperty("--resume-name-size", `${roundSize(nameSize * scale)}px`);
+}
+
+function roundSize(value) {
+  return Math.round(value * 10) / 10;
 }
 
 function resetColorsForStyle() {
@@ -617,6 +1035,13 @@ colorInputs.forEach((input) => {
 
 document.querySelector("#resetColorsButton").addEventListener("click", resetColorsForStyle);
 
+fontScaleInput.addEventListener("input", () => {
+  resume.fontScale = normalizeFontScale(fontScaleInput.value);
+  fontScaleValue.textContent = `${resume.fontScale}%`;
+  persist();
+  renderPreview();
+});
+
 document.querySelector("#photoInput").addEventListener("change", (event) => {
   const file = event.target.files?.[0];
   if (!file) return;
@@ -707,7 +1132,7 @@ function preparePrintTitle() {
 }
 
 function fitResumeToSinglePage() {
-  const layout = preview.querySelector(".resume-layout");
+  const layout = preview.querySelector(".resume-layout, .template-model");
   if (!layout) return 1;
 
   preview.style.setProperty("--print-scale", "1");
