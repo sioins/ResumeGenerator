@@ -129,7 +129,7 @@ h3 {
 
 .color-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -182,6 +182,10 @@ h3 {
   font-size: 12px;
   font-weight: 800;
   text-align: right;
+}
+
+.font-style-control {
+  margin-top: 12px;
 }
 
 .form-section {
@@ -320,7 +324,7 @@ textarea:focus {
   padding: 0;
   background: #ffffff;
   color: var(--resume-body);
-  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+  font-family: var(--resume-font-family);
   font-size: 13.2px;
   line-height: 1.6;
   letter-spacing: 0;
@@ -334,6 +338,7 @@ textarea:focus {
   --resume-section-title-size: 15.2px;
   --resume-sidebar-title-size: 15.2px;
   --resume-name-size: 26px;
+  --resume-font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
   --resume-sidebar: #364756;
   --resume-sidebar-text: #f7fafc;
   --resume-sidebar-muted: #d8e0e7;
@@ -1420,7 +1425,7 @@ textarea:focus {
 .style-blush .resume-name {
   margin-top: 8mm;
   color: var(--resume-heading);
-  font-family: Georgia, "Times New Roman", "Microsoft YaHei", serif;
+  font-family: inherit;
   font-size: var(--resume-name-size);
   font-weight: 500;
   line-height: 1.05;
@@ -1836,7 +1841,7 @@ textarea:focus {
   padding: 0;
   background: transparent;
   color: #98c379;
-  font-family: Consolas, "Courier New", monospace;
+  font-family: inherit;
   font-size: var(--resume-section-title-size);
   text-transform: uppercase;
 }
@@ -1874,7 +1879,7 @@ textarea:focus {
 .style-game .item-title,
 .style-game .achievement-title {
   color: var(--resume-heading);
-  font-family: Consolas, "Courier New", monospace;
+  font-family: inherit;
 }
 
 .style-game .item-subtitle {

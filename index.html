@@ -78,7 +78,11 @@
               <input data-color="bar" type="color" />
             </label>
             <label class="color-field">
-              <span>正文</span>
+              <span>标题字色</span>
+              <input data-color="heading" type="color" />
+            </label>
+            <label class="color-field">
+              <span>正文字色</span>
               <input data-color="text" type="color" />
             </label>
           </div>
@@ -87,6 +91,17 @@
             <input id="fontScaleInput" type="range" min="85" max="120" step="1" />
             <output id="fontScaleValue" for="fontScaleInput">100%</output>
           </div>
+          <label class="font-style-control">
+            字体样式
+            <select id="fontFamilySelect">
+              <option value="system">现代无衬线</option>
+              <option value="serif">经典衬线</option>
+              <option value="song">宋体正式</option>
+              <option value="kai">楷体文雅</option>
+              <option value="round">圆体柔和</option>
+              <option value="mono">等宽技术</option>
+            </select>
+          </label>
         </section>
 
         <form id="resumeForm" autocomplete="off">

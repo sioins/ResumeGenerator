@@ -3,116 +3,144 @@ const styleColorPresets = {
     accent: "#cbb8a0",
     sidebar: "#364756",
     bar: "#364756",
+    heading: "#1f2937",
     text: "#20242d"
   },
   modern: {
     accent: "#b7dbe8",
     sidebar: "#1f536a",
     bar: "#245b72",
+    heading: "#0f2f43",
     text: "#20242d"
   },
   compact: {
     accent: "#8f7a5a",
     sidebar: "#2f3437",
     bar: "#3f4749",
+    heading: "#1f2937",
     text: "#20242d"
   },
   awesome: {
     accent: "#b21f2d",
     sidebar: "#ffffff",
     bar: "#b21f2d",
+    heading: "#202124",
     text: "#202124"
   },
   flow: {
     accent: "#54a6c8",
     sidebar: "#eff7fb",
     bar: "#2f7697",
+    heading: "#163447",
     text: "#20242d"
   },
   novo: {
     accent: "#f2b84b",
     sidebar: "#242a38",
     bar: "#242a38",
+    heading: "#242a38",
     text: "#20242d"
   },
   minimal: {
     accent: "#8a6f4d",
     sidebar: "#ffffff",
     bar: "#2f3a3d",
+    heading: "#222426",
     text: "#222426"
   },
   table: {
     accent: "#7f9ca6",
     sidebar: "#ffffff",
     bar: "#dfe9ec",
+    heading: "#243238",
     text: "#243238"
   },
   blush: {
     accent: "#c6a08d",
     sidebar: "#f2dde0",
     bar: "#ead0d4",
+    heading: "#4b4b52",
     text: "#595960"
   },
   timeline: {
     accent: "#b98363",
     sidebar: "#eef2f5",
     bar: "#44566a",
+    heading: "#3f4a56",
     text: "#3f4a56"
   },
   engineer: {
     accent: "#6f8f72",
     sidebar: "#ffffff",
     bar: "#3d5f62",
+    heading: "#343f42",
     text: "#343f42"
   },
   game: {
     accent: "#8fb3ff",
     sidebar: "#384052",
     bar: "#697aa3",
+    heading: "#e8edf8",
     text: "#d8deec"
   },
   executive: {
     accent: "#bda18f",
     sidebar: "#ffffff",
     bar: "#5b5046",
+    heading: "#4a4d55",
     text: "#4a4d55"
   },
   slate: {
     accent: "#c9a36f",
     sidebar: "#3f4c5d",
     bar: "#4b5d73",
+    heading: "#374151",
     text: "#374151"
   },
   offset: {
     accent: "#b8c7d9",
     sidebar: "#eef1f5",
     bar: "#34495e",
+    heading: "#46505b",
     text: "#46505b"
   },
   bronze: {
     accent: "#a3836e",
     sidebar: "#ffffff",
     bar: "#3b3936",
+    heading: "#f0eeee",
     text: "#f0eeee"
   },
   softsplit: {
     accent: "#9b7f59",
     sidebar: "#f5f2ed",
     bar: "#4f5d58",
+    heading: "#4f5356",
     text: "#4f5356"
   },
   geometric: {
     accent: "#557184",
     sidebar: "#3f4848",
     bar: "#557184",
+    heading: "#3f3f43",
     text: "#3f3f43"
   },
   crimson: {
     accent: "#8b2b2e",
     sidebar: "#ffffff",
     bar: "#8b2b2e",
+    heading: "#47505c",
     text: "#47505c"
   }
+};
+
+const fontFamilyPresets = {
+  system: '"Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif',
+  serif: 'Georgia, "Times New Roman", "Noto Serif CJK SC", "SimSun", serif',
+  song: '"SimSun", "Songti SC", "Noto Serif CJK SC", serif',
+  kai: '"KaiTi", "Kaiti SC", "STKaiti", serif',
+  round: '"Microsoft YaHei UI", "PingFang SC", "Trebuchet MS", Arial, sans-serif',
+  mono: 'Consolas, "Cascadia Mono", "Courier New", "Microsoft YaHei", monospace'
 };
 
 const styleTypographyPresets = {
@@ -143,6 +171,7 @@ const defaultResume = {
   style: "classic",
   colors: styleColorPresets.classic,
   fontScale: 100,
+  fontFamily: "system",
   basics: {
     name: "张三",
     title: "前端开发工程师",
@@ -301,6 +330,7 @@ const importFile = document.querySelector("#importFile");
 const colorInputs = document.querySelectorAll("[data-color]");
 const fontScaleInput = document.querySelector("#fontScaleInput");
 const fontScaleValue = document.querySelector("#fontScaleValue");
+const fontFamilySelect = document.querySelector("#fontFamilySelect");
 let originalTitleForPrint = "";
 
 function clone(value) {
@@ -321,10 +351,12 @@ function mergeResume(base, saved) {
   Object.assign(merged, saved);
   merged.basics = { ...base.basics, ...(saved.basics || {}) };
   merged.fontScale = normalizeFontScale(saved.fontScale ?? base.fontScale);
+  merged.fontFamily = fontFamilyPresets[saved.fontFamily] ? saved.fontFamily : base.fontFamily;
   merged.colors = {
     ...(styleColorPresets[merged.style] || styleColorPresets.classic),
     ...(saved.colors || {})
   };
+  merged.colors.heading = merged.colors.heading || merged.colors.text;
   for (const key of ["skills", "education", "work", "projects", "awards"]) {
     merged[key] = Array.isArray(saved[key]) ? saved[key] : base[key];
   }
@@ -379,6 +411,7 @@ function renderForm() {
   styleSelect.value = resume.style;
   fontScaleInput.value = normalizeFontScale(resume.fontScale);
   fontScaleValue.textContent = `${fontScaleInput.value}%`;
+  fontFamilySelect.value = fontFamilyPresets[resume.fontFamily] ? resume.fontFamily : defaultResume.fontFamily;
   colorInputs.forEach((input) => {
     input.value = getResumeColors()[input.dataset.color];
   });
@@ -769,10 +802,12 @@ function modelAwardCard(item) {
 }
 
 function getResumeColors() {
-  return {
+  const colors = {
     ...(styleColorPresets[resume.style] || styleColorPresets.classic),
     ...(resume.colors || {})
   };
+  colors.heading = colors.heading || colors.text;
+  return colors;
 }
 
 function normalizeFontScale(value) {
@@ -800,6 +835,7 @@ function applyPreviewTypography() {
   preview.style.setProperty("--resume-section-title-size", `${roundSize(sectionTitleSize * scale)}px`);
   preview.style.setProperty("--resume-sidebar-title-size", `${roundSize(sidebarTitleSize * scale)}px`);
   preview.style.setProperty("--resume-name-size", `${roundSize(nameSize * scale)}px`);
+  preview.style.setProperty("--resume-font-family", fontFamilyPresets[resume.fontFamily] || fontFamilyPresets.system);
 }
 
 function roundSize(value) {
@@ -824,7 +860,7 @@ function applyPreviewColors() {
   preview.style.setProperty("--resume-achievement", colors.accent);
   preview.style.setProperty("--resume-sidebar", colors.sidebar);
   preview.style.setProperty("--resume-bar", colors.bar);
-  preview.style.setProperty("--resume-heading", colors.text);
+  preview.style.setProperty("--resume-heading", colors.heading);
   preview.style.setProperty("--resume-body", colors.text);
 }
 
@@ -1038,6 +1074,12 @@ document.querySelector("#resetColorsButton").addEventListener("click", resetColo
 fontScaleInput.addEventListener("input", () => {
   resume.fontScale = normalizeFontScale(fontScaleInput.value);
   fontScaleValue.textContent = `${resume.fontScale}%`;
+  persist();
+  renderPreview();
+});
+
+fontFamilySelect.addEventListener("change", () => {
+  resume.fontFamily = fontFamilyPresets[fontFamilySelect.value] ? fontFamilySelect.value : defaultResume.fontFamily;
   persist();
   renderPreview();
 });
